@@ -264,27 +264,67 @@ class _ProductviewownerWidgetState extends State<ProductviewownerWidget> {
                               mainAxisSize: MainAxisSize.max,
                               mainAxisAlignment: MainAxisAlignment.center,
                               children: [
-                                FFButtonWidget(
-                                  onPressed: () async {
-                                    await widget.prod!.delete();
-                                  },
-                                  text: 'Delete',
-                                  options: FFButtonOptions(
-                                    width: 130,
-                                    height: 40,
-                                    color: Color(0xFF0F3D3E),
-                                    textStyle: FlutterFlowTheme.of(context)
-                                        .subtitle2
-                                        .override(
-                                          fontFamily: 'Poppins',
-                                          color: Colors.white,
-                                        ),
-                                    borderSide: BorderSide(
-                                      color: Colors.transparent,
-                                      width: 1,
-                                    ),
-                                    borderRadius: BorderRadius.circular(8),
+                                StreamBuilder<List<FavouritesRecord>>(
+                                  stream: queryFavouritesRecord(
+                                    queryBuilder: (favouritesRecord) =>
+                                        favouritesRecord.where('product_name',
+                                            isEqualTo: widget.name),
+                                    singleRecord: true,
                                   ),
+                                  builder: (context, snapshot) {
+                                    // Customize what your widget looks like when it's loading.
+                                    if (!snapshot.hasData) {
+                                      return Center(
+                                        child: SizedBox(
+                                          width: 50,
+                                          height: 50,
+                                          child: CircularProgressIndicator(
+                                            color: FlutterFlowTheme.of(context)
+                                                .primaryColor,
+                                          ),
+                                        ),
+                                      );
+                                    }
+                                    List<FavouritesRecord>
+                                        buttonFavouritesRecordList =
+                                        snapshot.data!;
+                                    // Return an empty Container when the item does not exist.
+                                    if (snapshot.data!.isEmpty) {
+                                      return Container();
+                                    }
+                                    final buttonFavouritesRecord =
+                                        buttonFavouritesRecordList.isNotEmpty
+                                            ? buttonFavouritesRecordList.first
+                                            : null;
+                                    return FFButtonWidget(
+                                      onPressed: () async {
+                                        await productviewownerProductRecord!
+                                            .reference
+                                            .delete();
+                                        await buttonFavouritesRecord!.reference
+                                            .delete();
+
+                                        context.pushNamed('userdashboard');
+                                      },
+                                      text: 'Delete',
+                                      options: FFButtonOptions(
+                                        width: 130,
+                                        height: 40,
+                                        color: Color(0xFF0F3D3E),
+                                        textStyle: FlutterFlowTheme.of(context)
+                                            .subtitle2
+                                            .override(
+                                              fontFamily: 'Poppins',
+                                              color: Colors.white,
+                                            ),
+                                        borderSide: BorderSide(
+                                          color: Colors.transparent,
+                                          width: 1,
+                                        ),
+                                        borderRadius: BorderRadius.circular(8),
+                                      ),
+                                    );
+                                  },
                                 ),
                               ],
                             ),
