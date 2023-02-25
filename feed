@@ -1,4 +1,5 @@
 import '../backend/backend.dart';
+import '../components/filter_widget.dart';
 import '../flutter_flow/flutter_flow_animations.dart';
 import '../flutter_flow/flutter_flow_icon_button.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
@@ -29,6 +30,8 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
   void initState() {
     super.initState();
     _model = createModel(context, () => FeedModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -41,14 +44,16 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Color(0xFF100F0F),
       floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          print('FloatingActionButton pressed ...');
+        onPressed: () async {
+          context.pushNamed('addproduct');
         },
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
+        backgroundColor: Color(0xFF0F3D3E),
         elevation: 8,
         label: FlutterFlowIconButton(
           borderColor: Colors.transparent,
@@ -57,19 +62,19 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
           buttonSize: 60,
           icon: Icon(
             Icons.add,
-            color: FlutterFlowTheme.of(context).primaryText,
+            color: FlutterFlowTheme.of(context).primaryBtnText,
             size: 30,
           ),
-          onPressed: () {
-            print('IconButton pressed ...');
+          onPressed: () async {
+            context.pushNamed('addproduct');
           },
         ),
       ),
       appBar: AppBar(
-        backgroundColor: FlutterFlowTheme.of(context).primaryColor,
+        backgroundColor: Color(0xFF0F3D3E),
         automaticallyImplyLeading: false,
         title: Text(
-          'My Products',
+          'Feed',
           style: FlutterFlowTheme.of(context).title2.override(
                 fontFamily: 'Poppins',
                 color: Colors.white,
@@ -94,7 +99,10 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                     children: [
                       Text(
                         'Latest Products',
-                        style: FlutterFlowTheme.of(context).subtitle1,
+                        style: FlutterFlowTheme.of(context).subtitle1.override(
+                              fontFamily: 'Poppins',
+                              color: Color(0xFFE2DCC8),
+                            ),
                       ),
                       FlutterFlowIconButton(
                         borderColor: Colors.transparent,
@@ -103,11 +111,22 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                         buttonSize: 40,
                         icon: Icon(
                           Icons.tune_rounded,
-                          color: FlutterFlowTheme.of(context).secondaryText,
+                          color: Color(0xFFE2DCC8),
                           size: 20,
                         ),
-                        onPressed: () {
-                          print('IconButton pressed ...');
+                        onPressed: () async {
+                          await showModalBottomSheet(
+                            isScrollControlled: true,
+                            backgroundColor: Colors.transparent,
+                            enableDrag: false,
+                            context: context,
+                            builder: (context) {
+                              return Padding(
+                                padding: MediaQuery.of(context).viewInsets,
+                                child: FilterWidget(),
+                              );
+                            },
+                          ).then((value) => setState(() {}));
                         },
                       ),
                     ],
@@ -117,8 +136,9 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                   padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 44),
                   child: StreamBuilder<List<ProductRecord>>(
                     stream: queryProductRecord(
-                      queryBuilder: (productRecord) =>
-                          productRecord.orderBy('created_at', descending: true),
+                      queryBuilder: (productRecord) => productRecord
+                          .where('on_sale', isEqualTo: true)
+                          .orderBy('created_at', descending: true),
                     ),
                     builder: (context, snapshot) {
                       // Customize what your widget looks like when it's loading.
@@ -176,25 +196,27 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                                 child: Row(
                                   mainAxisSize: MainAxisSize.max,
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsetsDirectional.fromSTEB(
-                                          4, 4, 4, 4),
-                                      child: ClipRRect(
-                                        borderRadius: BorderRadius.circular(12),
-                                        child: Image.network(
-                                          listViewProductRecord.image!,
-                                          width: 120,
-                                          height: 100,
-                                          fit: BoxFit.cover,
-                                        ),
-                                      ),
-                                    ),
                                     Expanded(
                                       child: Column(
                                         mainAxisSize: MainAxisSize.max,
                                         crossAxisAlignment:
-                                            CrossAxisAlignment.start,
+                                            CrossAxisAlignment.center,
                                         children: [
+                                          Padding(
+                                            padding:
+                                                EdgeInsetsDirectional.fromSTEB(
+                                                    4, 4, 4, 4),
+                                            child: ClipRRect(
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              child: Image.network(
+                                                listViewProductRecord.image!,
+                                                width: 120,
+                                                height: 100,
+                                                fit: BoxFit.cover,
+                                              ),
+                                            ),
+                                          ),
                                           Padding(
                                             padding:
                                                 EdgeInsetsDirectional.fromSTEB(
@@ -202,8 +224,7 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   listViewProductRecord.name!,
@@ -221,8 +242,7 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment
-                                                      .spaceBetween,
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   listViewProductRecord
@@ -241,7 +261,7 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                                             child: Row(
                                               mainAxisSize: MainAxisSize.max,
                                               mainAxisAlignment:
-                                                  MainAxisAlignment.end,
+                                                  MainAxisAlignment.center,
                                               children: [
                                                 Text(
                                                   formatNumber(
@@ -259,9 +279,7 @@ class _FeedWidgetState extends State<FeedWidget> with TickerProviderStateMixin {
                                                       .override(
                                                         fontFamily: 'Poppins',
                                                         color:
-                                                            FlutterFlowTheme.of(
-                                                                    context)
-                                                                .primaryColor,
+                                                            Color(0xFF0F3D3E),
                                                       ),
                                                 ),
                                               ],
