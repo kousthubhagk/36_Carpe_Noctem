@@ -27,6 +27,8 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => OpeningpageModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -39,9 +41,11 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return Scaffold(
       key: scaffoldKey,
-      backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+      backgroundColor: Color(0xFF100F0F),
       body: SafeArea(
         child: GestureDetector(
           onTap: () => FocusScope.of(context).requestFocus(_unfocusNode),
@@ -50,8 +54,8 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
               Image.asset(
                 'assets/images/Sign_Up1.png',
                 width: MediaQuery.of(context).size.width,
-                height: MediaQuery.of(context).size.height * 1,
-                fit: BoxFit.cover,
+                height: MediaQuery.of(context).size.height * 1.07,
+                fit: BoxFit.fill,
               ),
               Stack(
                 children: [
@@ -97,7 +101,7 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
                                                         .override(
                                                           fontFamily: 'Poppins',
                                                           color:
-                                                              Color(0xFF0F3D3E),
+                                                              Color(0xFFE2DCC8),
                                                         ),
                                                   ),
                                                 ),
@@ -152,8 +156,8 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 12, 0, 16),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
+                          onPressed: () async {
+                            context.pushNamed('logreg');
                           },
                           text: 'Login',
                           options: FFButtonOptions(
@@ -176,14 +180,14 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
                       Padding(
                         padding: EdgeInsetsDirectional.fromSTEB(0, 0, 0, 24),
                         child: FFButtonWidget(
-                          onPressed: () {
-                            print('Button pressed ...');
+                          onPressed: () async {
+                            context.pushNamed('logreg');
                           },
                           text: 'Register',
                           options: FFButtonOptions(
                             width: 300,
                             height: 50,
-                            color: FlutterFlowTheme.of(context).primaryText,
+                            color: Color(0xFF100F0F),
                             textStyle:
                                 FlutterFlowTheme.of(context).subtitle2.override(
                                       fontFamily: 'Poppins',
@@ -191,7 +195,7 @@ class _OpeningpageWidgetState extends State<OpeningpageWidget> {
                                     ),
                             elevation: 2,
                             borderSide: BorderSide(
-                              color: Colors.transparent,
+                              color: Color(0xFF100F0F),
                               width: 1,
                             ),
                           ),
