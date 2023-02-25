@@ -1,8 +1,10 @@
+import '../auth/auth_util.dart';
 import '../backend/backend.dart';
 import '../flutter_flow/flutter_flow_count_controller.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
 import '../flutter_flow/flutter_flow_widgets.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -316,12 +318,64 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                                   ),
                                 ),
                                 FFButtonWidget(
-                                  onPressed: () {
-                                    print('Button pressed ...');
+                                  onPressed: () async {
+                                    final productUpdateData = {
+                                      'quantity': FieldValue.increment(
+                                          -(_model.countControllerValue!)),
+                                    };
+                                    await productviewProductRecord!.reference
+                                        .update(productUpdateData);
                                   },
                                   text: 'Buy',
                                   options: FFButtonOptions(
                                     width: 130,
+                                    height: 40,
+                                    color: Color(0xFF0F3D3E),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .subtitle2
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                        ),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                FFButtonWidget(
+                                  onPressed: () async {
+                                    final favouritesCreateData =
+                                        createFavouritesRecordData(
+                                      productName:
+                                          productviewProductRecord!.name,
+                                      buyer: currentUserDisplayName,
+                                      sellerName:
+                                          productviewProductRecord!.sellername,
+                                      price: productviewProductRecord!.price,
+                                      productPhoto:
+                                          productviewProductRecord!.image,
+                                    );
+                                    await FavouritesRecord.collection
+                                        .doc()
+                                        .set(favouritesCreateData);
+
+                                    context.pushNamed('feed');
+                                  },
+                                  text: 'Add to favourites',
+                                  options: FFButtonOptions(
+                                    width: 180,
                                     height: 40,
                                     color: Color(0xFF0F3D3E),
                                     textStyle: FlutterFlowTheme.of(context)
