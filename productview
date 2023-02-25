@@ -1,7 +1,10 @@
 import '../backend/backend.dart';
+import '../flutter_flow/flutter_flow_count_controller.dart';
 import '../flutter_flow/flutter_flow_theme.dart';
 import '../flutter_flow/flutter_flow_util.dart';
+import '../flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
@@ -29,6 +32,8 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
   void initState() {
     super.initState();
     _model = createModel(context, () => ProductviewModel());
+
+    WidgetsBinding.instance.addPostFrameCallback((_) => setState(() {}));
   }
 
   @override
@@ -40,6 +45,8 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
 
   @override
   Widget build(BuildContext context) {
+    context.watch<FFAppState>();
+
     return StreamBuilder<List<ProductRecord>>(
       stream: queryProductRecord(
         queryBuilder: (productRecord) =>
@@ -69,7 +76,7 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
             : null;
         return Scaffold(
           key: scaffoldKey,
-          backgroundColor: FlutterFlowTheme.of(context).primaryBackground,
+          backgroundColor: Color(0xFF100F0F),
           body: Column(
             mainAxisSize: MainAxisSize.max,
             children: [
@@ -86,8 +93,8 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                         children: [
                           Align(
                             alignment: AlignmentDirectional(0, 0),
-                            child: Image.asset(
-                              'assets/images/df3hg_',
+                            child: Image.network(
+                              productviewProductRecord!.image!,
                               width: MediaQuery.of(context).size.width,
                               height: 240,
                               fit: BoxFit.cover,
@@ -141,7 +148,10 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                           child: Text(
                             productviewProductRecord!.name!,
                             textAlign: TextAlign.start,
-                            style: FlutterFlowTheme.of(context).title2,
+                            style: FlutterFlowTheme.of(context).title2.override(
+                                  fontFamily: 'Poppins',
+                                  color: Color(0xFFE2DCC8),
+                                ),
                           ),
                         ),
                       ],
@@ -174,7 +184,11 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                               currency: 'INR ',
                             ),
                             textAlign: TextAlign.start,
-                            style: FlutterFlowTheme.of(context).subtitle1,
+                            style:
+                                FlutterFlowTheme.of(context).subtitle1.override(
+                                      fontFamily: 'Poppins',
+                                      color: Color(0xFFE2DCC8),
+                                    ),
                           ),
                         ),
                       ],
@@ -198,7 +212,12 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                                 decimalType: DecimalType.automatic,
                               ),
                               textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context).subtitle1,
+                              style: FlutterFlowTheme.of(context)
+                                  .subtitle1
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFFE2DCC8),
+                                  ),
                             ),
                           ),
                         ],
@@ -228,7 +247,97 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
                             child: Text(
                               productviewProductRecord!.description!,
                               textAlign: TextAlign.start,
-                              style: FlutterFlowTheme.of(context).subtitle2,
+                              style: FlutterFlowTheme.of(context)
+                                  .subtitle2
+                                  .override(
+                                    fontFamily: 'Poppins',
+                                    color: Color(0xFFE2DCC8),
+                                  ),
+                            ),
+                          ),
+                          Padding(
+                            padding:
+                                EdgeInsetsDirectional.fromSTEB(0, 40, 0, 0),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.max,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Align(
+                                  alignment: AlignmentDirectional(0, 0),
+                                  child: Padding(
+                                    padding: EdgeInsetsDirectional.fromSTEB(
+                                        0, 0, 8, 0),
+                                    child: Container(
+                                      width: 120,
+                                      height: 40,
+                                      decoration: BoxDecoration(
+                                        color: Colors.white,
+                                        borderRadius: BorderRadius.circular(25),
+                                        shape: BoxShape.rectangle,
+                                        border: Border.all(
+                                          color: Color(0xFF9E9E9E),
+                                          width: 1,
+                                        ),
+                                      ),
+                                      child: FlutterFlowCountController(
+                                        decrementIconBuilder: (enabled) =>
+                                            FaIcon(
+                                          FontAwesomeIcons.minus,
+                                          color: enabled
+                                              ? Color(0xDD000000)
+                                              : Color(0xFFEEEEEE),
+                                          size: 20,
+                                        ),
+                                        incrementIconBuilder: (enabled) =>
+                                            FaIcon(
+                                          FontAwesomeIcons.plus,
+                                          color: enabled
+                                              ? Colors.blue
+                                              : Color(0xFFEEEEEE),
+                                          size: 20,
+                                        ),
+                                        countBuilder: (count) => Text(
+                                          count.toString(),
+                                          style: GoogleFonts.getFont(
+                                            'Roboto',
+                                            color: Colors.black,
+                                            fontWeight: FontWeight.w600,
+                                            fontSize: 16,
+                                          ),
+                                        ),
+                                        count: _model.countControllerValue ??=
+                                            0,
+                                        updateCount: (count) => setState(() =>
+                                            _model.countControllerValue =
+                                                count),
+                                        stepSize: 1,
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                                FFButtonWidget(
+                                  onPressed: () {
+                                    print('Button pressed ...');
+                                  },
+                                  text: 'Buy',
+                                  options: FFButtonOptions(
+                                    width: 130,
+                                    height: 40,
+                                    color: Color(0xFF0F3D3E),
+                                    textStyle: FlutterFlowTheme.of(context)
+                                        .subtitle2
+                                        .override(
+                                          fontFamily: 'Poppins',
+                                          color: Colors.white,
+                                        ),
+                                    borderSide: BorderSide(
+                                      color: Colors.transparent,
+                                      width: 1,
+                                    ),
+                                    borderRadius: BorderRadius.circular(8),
+                                  ),
+                                ),
+                              ],
                             ),
                           ),
                         ],
@@ -245,4 +354,3 @@ class _ProductviewWidgetState extends State<ProductviewWidget> {
     );
   }
 }
-
